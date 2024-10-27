@@ -1,3 +1,8 @@
+if (isUnix()) {
+    sh 'nohup command &'
+} else {
+    bat 'start /B command'
+}
 pipeline {
     agent any
     environment {
