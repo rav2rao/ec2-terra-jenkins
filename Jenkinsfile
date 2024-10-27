@@ -6,15 +6,15 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
-    
     stages {
-        stage('Code Checkout') {
+        stage('Code Git Repo') {
             steps {
-                // Clone your repository
-                sh 'echo passed checking out the code'
-        //git branch: 'main', url: 
-                git branch: 'main', url: 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
-           }
+                git(
+                    url: "https://github.com/rav2rao/ec2-terra-jenkins.git",
+                    branch: "main"
+                 )   
+                //git branch: 'main', url: 
+            }
         }    
         stage ("Terraform Initialize") {
             steps {
