@@ -42,7 +42,7 @@ pipeline {
             steps {
                 // echo "Terraform action is --> ${action}"
 		echo "Terraform to perform apply
-		sh ('terraform apply --auto-approve')
+		    sh ('terraform apply --auto-approve')
                 // sh ('terraform ${action} --auto-approve') 
            }
         }
