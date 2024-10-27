@@ -1,25 +1,20 @@
 pipeline {
-
     agent any
-
     environment {
         // AWS Credentials
         AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
-
+    
     stages {
-
-   
-
         stage('Code Checkout') {
             steps {
                 // Clone your repository
-                git branch: 'main',
-                    url: 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
+                sh 'echo passed checking out the code'
+        //git branch: 'main', url: 
+                git branch: 'main', url: 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
            }
-        }
-    
+        }    
         stage ("Terraform Initialize") {
             steps {
                 sh ('terraform init')
