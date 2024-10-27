@@ -70,10 +70,8 @@ pipeline {
                     // You can add commands to verify the EC2 instance or any resources
                     sh '''
                     echo "Deployment Successful. Checking EC2 instance..."
-                    # Example command to list EC2 instances
-                    aws ec2 describe-instances --filters Name=instance-type, Values=t2.micro Region=eu-west-2
-                    // aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name]" --output table
-                    aws ec2 describe-instances --query "Reservations[*].Instances[*].{Instance:InstanceId,Subnet:SubnetId}" --output json
+                    
+                    aws ec2 describe-instances --query "Reservations[*].Instances[*].{Instance:InstanceId,Subnet:SubnetId}" --region eu-west-2 --output json
                     '''
                 }
             }
@@ -81,14 +79,14 @@ pipeline {
     }
 
     post {
-        always {
-            // Cleanup: Remove the Terraform plan file if it exists
-            script {
-                sh '''
-                rm -f tfplan
-                '''
-            }
-        }
+        // always {
+        //     // Cleanup: Remove the Terraform plan file if it exists
+        //     script {
+        //         sh '''
+        //         rm -f tfplan
+        //         '''
+        //     }
+        // }
         success {
             echo 'Deployment completed successfully!'
         }
