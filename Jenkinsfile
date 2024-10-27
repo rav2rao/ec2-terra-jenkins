@@ -46,12 +46,13 @@ pipeline {
 
         stage ("Terraform Apply to provision") {
             steps {
-                script {
-                    // Apply the Terraform plan
-                    sh '''
-                    terraform apply -auto-approve tfplan
-                    '''
-                }
+                sh ('terraform apply --auto-approve')
+                // script {
+                //     // Apply the Terraform plan
+                //     sh '''
+                //     terraform apply -auto-approve tfplan
+                //     '''
+                // }
             }
         }
 
