@@ -3,62 +3,83 @@ pipeline {
     agent any
 
     environment {
+        // AWS Credentials
         AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
 
-    // options {
-    //     ansiColor('xterm')
-    //     timeout(time: 20, unit: 'MINUTES')
-    // }
-
     stages {
 
-    //     stage('Notify Start'){
-    //         steps{
-    //             slackSend color: "good", message: "Started applying the Terraform Change with Action as ${action}"
-    //         }
-    //     }
+   
 
         stage('Code Checkout') {
             steps {
-                checkout scm
-            }
+                // Clone your repository containing Terraform configuration
+                git 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
+           }
         }
     
-        stage ("Terraform Init") {
+        stage ("Terraform Initialize") {
             steps {
-                sh ("terraform init -reconfigure") 
+                script {
+                    // Terraform initializes to get the plugins from provider
+                    sh '''
+                    terraform init
+                    '''
+                }
             }
         }
         
-        stage ("Terraform Plan") {
+        stage ("Terraform Plan before deployment") {
             steps {
-                sh ('terraform plan') 
+                script {
+                    // Plan the Terraform deployment
+                    sh '''
+                    terraform plan -out=tfplan
+                    '''
+                }
             }
         }
 
-        stage ("Terraform Action") {
+        stage ("Terraform Apply to provision") {
             steps {
-                // echo "Terraform action is --> ${action}"
-		echo "Terraform to perform apply
-		    sh ('terraform apply --auto-approve')
-                // sh ('terraform ${action} --auto-approve') 
-           }
+                script {
+                    // Apply the Terraform plan
+                    sh '''
+                    terraform apply -auto-approve tfplan
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Resource Deployed') {
+            steps {
+                script {
+                    // You can add commands to verify the EC2 instance or any resources
+                    sh '''
+                    echo "Deployment Successful. Checking EC2 instance..."
+                    # Example command to list EC2 instances
+                    aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name]" --output table
+                    '''
+                }
+            }
         }
     }
-    // post {
-	//  success{
-    //             slackSend color: "good", message: "Completed applying the Terraform Change with Action as ${action}"
-    //      }
-	//  failure{
-    //     	slackSend color: "bad", message: "Job Failed while applying the Terraform Change with Action as ${action}" 
-	//  }
-	//  aborted{
-	// 	slackSend color: "bad", message: "Job was aborted while applying the Terraform Change with Action as ${action}"
-	//  }
-	//  cleanup{
-	// 	cleanWs()
-	//  }
-    // }
+
+    post {
+        always {
+            // Cleanup: Remove the Terraform plan file if it exists
+            script {
+                sh '''
+                rm -f tfplan
+                '''
+            }
+        }
+        success {
+            echo 'Deployment completed successfully!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
 }
