@@ -22,23 +22,25 @@ pipeline {
     
         stage ("Terraform Initialize") {
             steps {
-                script {
-                    // Terraform initializes to get the plugins from provider
-                    sh '''
-                    terraform init
-                    '''
-                }
+                sh ('terraform init')
+                // script {
+                //     // Terraform initializes to get the plugins from provider
+                //     sh '''
+                //     terraform init
+                //     '''
+                // }
             }
         }
         
         stage ("Terraform Plan before deployment") {
             steps {
-                script {
-                    // Plan the Terraform deployment
-                    sh '''
-                    terraform plan -out=tfplan
-                    '''
-                }
+                sh ('terraform plan')
+                // script {
+                //     // Plan the Terraform deployment
+                //     sh '''
+                //     terraform plan -out=tfplan
+                //     '''
+                // }
             }
         }
 
