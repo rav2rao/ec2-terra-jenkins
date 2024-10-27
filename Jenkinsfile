@@ -64,7 +64,7 @@ pipeline {
         //     }
         // }
 
-        stage ('ec2 describe instances')
+        stage ('ec2 describe instances') {
             steps {
                 sh '''
                 echo "ec2 describing"
@@ -74,6 +74,7 @@ pipeline {
                     --output text
                 '''
             }
+        }
 
         stage('Verify Resource Deployed') {
             steps {
