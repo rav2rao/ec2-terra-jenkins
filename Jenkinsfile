@@ -14,8 +14,9 @@ pipeline {
 
         stage('Code Checkout') {
             steps {
-                // Clone your repository containing Terraform configuration
-                git 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
+                // Clone your repository
+                git branch: 'main',
+                    url: 'https://github.com/rav2rao/ec2-terra-jenkins.git' 
            }
         }
     
