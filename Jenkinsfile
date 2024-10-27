@@ -64,6 +64,17 @@ pipeline {
         //     }
         // }
 
+        stage ('ec2 describe instances')
+            steps {
+                sh '''
+                echo "ec2 describing"
+                aws ec2 describe-instances \
+                    --filters "Name=instance-type,Values=t2.micro" \
+                    --query "Reservations[*].Instances[*].[InstanceId]" \
+                    --output text
+                '''
+            }
+
         stage('Verify Resource Deployed') {
             steps {
                 script {
