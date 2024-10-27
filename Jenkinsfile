@@ -7,10 +7,10 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
     }
 
-    options {
-        ansiColor('xterm')
-        timeout(time: 20, unit: 'MINUTES')
-    }
+    // options {
+    //     ansiColor('xterm')
+    //     timeout(time: 20, unit: 'MINUTES')
+    // }
 
     stages {
 
