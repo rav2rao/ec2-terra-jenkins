@@ -50,44 +50,7 @@ pipeline {
                 //     '''
                 // }
             }
-        }
-// This stage need to be comment out when provisioning the ec2, when destroying ensure to comment the above three stages
-        // stage ("Terraform Destroy to Delete the ec2 & sg") {
-        //     steps {
-        //         sh ('terraform destroy --auto-approve')
-        //         // script {
-        //         //     // Apply the Terraform plan
-        //         //     sh '''
-        //         //     terraform apply -auto-approve tfplan
-        //         //     '''
-        //         // }
-        //     }
-        // }
-
-        stage ('ec2 describe instances') {
-            steps {
-                sh '''
-                echo "ec2 describing"
-                aws ec2 describe-instances \
-                    --filters "Name=instance-type,Values=t2.micro" \
-                    --query "Reservations[*].Instances[*].[InstanceId]" \
-                    --output text
-                '''
-            }
-        }
-
-        stage('Verify Resource Deployed') {
-            steps {
-                script {
-                    // You can add commands to verify the EC2 instance or any resources
-                    sh '''
-                    echo "Deployment Successful. Checking EC2 instance..."
-                    
-                    aws ec2 describe-instances --query "Reservations[*].Instances[*].{Instance:InstanceId,Subnet:SubnetId}" --region eu-west-2 --output json
-                    '''
-                }
-            }
-        }
+        }     
     }
 
     post {
